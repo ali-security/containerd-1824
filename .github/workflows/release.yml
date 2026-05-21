@@ -2,18 +2,18 @@ on:
   push:
     branches:
       - main
-      - "release/**"
+      - release/**
     tags:
-      - "v*" # Push events to matching v*, i.e. v1.0, v20.15.10
+      - v*   # Push events to matching v*, i.e. v1.0, v20.15.10
   pull_request:
     branches:
       - main
-      - "release/**"
+      - release/**
 
 name: Release
 
 env:
-  GO_VERSION: "1.20.13"
+  GO_VERSION: 1.20.13
 
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
@@ -22,7 +22,7 @@ jobs:
   check:
     name: Check Signed Tag
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 5
     outputs:
       stringver: ${{ steps.contentrel.outputs.stringver }}
@@ -57,14 +57,14 @@ jobs:
         working-directory: src/github.com/containerd/containerd
 
       - name: Save release notes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: containerd-release-notes
           path: src/github.com/containerd/containerd/release-notes.md
 
   build:
     name: Build Release Binaries
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
     strategy:
       matrix:
@@ -127,7 +127,7 @@ jobs:
         env:
           PLATFORM: ${{ matrix.dockerfile-platform }}
       - name: Save Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release-tars-${{env.PLATFORM_CLEAN}}
           path: src/github.com/containerd/containerd/releases/*.tar.gz*
@@ -137,7 +137,7 @@ jobs:
     if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
     permissions:
       contents: write
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
     timeout-minutes: 10
     needs: [build, check]
     steps:

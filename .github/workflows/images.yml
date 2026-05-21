@@ -1,21 +1,21 @@
-name: "Mirror Test Image"
+name: Mirror Test Image
 on:
   workflow_dispatch:
     inputs:
       upstream:
-        description: "Upstream image to mirror"
+        description: Upstream image to mirror
         required: true
-        default: "docker.io/library/busybox:1.32"
+        default: docker.io/library/busybox:1.32
       image:
-        description: "Target image name (override)"
+        description: Target image name (override)
 
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
 
 jobs:
   mirror:
-    name: "Mirror Image"
-    runs-on: ubuntu-latest
+    name: Mirror Image
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
 
     permissions:
@@ -28,7 +28,7 @@ jobs:
     steps:
       - uses: actions/setup-go@v3
         with:
-          go-version: "1.20.13"
+          go-version: 1.20.13
 
       - uses: actions/checkout@v3
         with:

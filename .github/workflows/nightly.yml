@@ -1,13 +1,11 @@
 name: Nightly
 on:
-  schedule:
-    - cron: "0 0 * * *" # Every day at midnight
   pull_request:
     paths:
-      - ".github/workflows/nightly.yml"
+      - .github/workflows/nightly.yml
 
 env:
-  GO_VERSION: "1.20.13"
+  GO_VERSION: 1.20.13
 
 permissions: # added using https://github.com/step-security/secure-workflows
   contents: read
@@ -15,7 +13,7 @@ permissions: # added using https://github.com/step-security/secure-workflows
 jobs:
   linux:
     name: Linux
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     timeout-minutes: 30
 
     defaults:
@@ -104,38 +102,38 @@ jobs:
       #
 
       - name: Upload artifacts (linux_amd64)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: linux_amd64
           path: src/github.com/containerd/containerd/bin_amd64
 
       - name: Upload artifacts (linux_arm64)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: linux_arm64
           path: src/github.com/containerd/containerd/bin_arm64
 
       - name: Upload artifacts (linux_s390x)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: linux_s390x
           path: src/github.com/containerd/containerd/bin_s390x
 
       - name: Upload artifacts (linux_ppc64le)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: linux_ppc64le
           path: src/github.com/containerd/containerd/bin_ppc64le
 
       - name: Upload artifacts (linux_riscv64)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: linux_riscv64
           path: src/github.com/containerd/containerd/bin_riscv64
 
   windows:
     name: Windows
-    runs-on: windows-latest
+    runs-on: windows-2022
     timeout-minutes: 30
 
     defaults:
@@ -165,7 +163,7 @@ jobs:
           make binaries
 
       - name: Upload artifacts (windows_amd64)
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: windows_amd64
           path: src/github.com/containerd/containerd/bin/
