@@ -131,12 +131,9 @@ func WithCheckpointImagePath(path string) CheckpointTaskOpts {
 func WithRestoreImagePath(path string) NewTaskOpts {
 	return func(ctx context.Context, c *Client, ti *TaskInfo) error {
 		if CheckRuntime(ti.Runtime(), "io.containerd.runc") {
-			if ti.Options == nil {
-				ti.Options = &options.Options{}
-			}
-			opts, ok := ti.Options.(*options.Options)
-			if !ok {
-				return errors.New("invalid v2 shim create options format")
+			opts, err := ti.getRuncOptions()
+			if err != nil {
+				return err
 			}
 			opts.CriuImagePath = path
 		} else {

@@ -30,12 +30,9 @@ import (
 // There is an upper limit on the number of keyrings in a linux system
 func WithNoNewKeyring(ctx context.Context, c *Client, ti *TaskInfo) error {
 	if CheckRuntime(ti.Runtime(), "io.containerd.runc") {
-		if ti.Options == nil {
-			ti.Options = &options.Options{}
-		}
-		opts, ok := ti.Options.(*options.Options)
-		if !ok {
-			return errors.New("invalid v2 shim create options format")
+		opts, err := ti.getRuncOptions()
+		if err != nil {
+			return err
 		}
 		opts.NoNewKeyring = true
 	} else {
@@ -54,12 +51,9 @@ func WithNoNewKeyring(ctx context.Context, c *Client, ti *TaskInfo) error {
 // WithNoPivotRoot instructs the runtime not to you pivot_root
 func WithNoPivotRoot(_ context.Context, _ *Client, ti *TaskInfo) error {
 	if CheckRuntime(ti.Runtime(), "io.containerd.runc") {
-		if ti.Options == nil {
-			ti.Options = &options.Options{}
-		}
-		opts, ok := ti.Options.(*options.Options)
-		if !ok {
-			return errors.New("invalid v2 shim create options format")
+		opts, err := ti.getRuncOptions()
+		if err != nil {
+			return err
 		}
 		opts.NoPivotRoot = true
 	} else {
@@ -82,12 +76,9 @@ func WithNoPivotRoot(_ context.Context, _ *Client, ti *TaskInfo) error {
 func WithShimCgroup(path string) NewTaskOpts {
 	return func(ctx context.Context, c *Client, ti *TaskInfo) error {
 		if CheckRuntime(ti.Runtime(), "io.containerd.runc") {
-			if ti.Options == nil {
-				ti.Options = &options.Options{}
-			}
-			opts, ok := ti.Options.(*options.Options)
-			if !ok {
-				return errors.New("invalid v2 shim create options format")
+			opts, err := ti.getRuncOptions()
+			if err != nil {
+				return err
 			}
 			opts.ShimCgroup = path
 		} else {
@@ -108,12 +99,9 @@ func WithShimCgroup(path string) NewTaskOpts {
 func WithUIDOwner(uid uint32) NewTaskOpts {
 	return func(ctx context.Context, c *Client, ti *TaskInfo) error {
 		if CheckRuntime(ti.Runtime(), "io.containerd.runc") {
-			if ti.Options == nil {
-				ti.Options = &options.Options{}
-			}
-			opts, ok := ti.Options.(*options.Options)
-			if !ok {
-				return errors.New("invalid v2 shim create options format")
+			opts, err := ti.getRuncOptions()
+			if err != nil {
+				return err
 			}
 			opts.IoUid = uid
 		} else {
@@ -134,12 +122,9 @@ func WithUIDOwner(uid uint32) NewTaskOpts {
 func WithGIDOwner(gid uint32) NewTaskOpts {
 	return func(ctx context.Context, c *Client, ti *TaskInfo) error {
 		if CheckRuntime(ti.Runtime(), "io.containerd.runc") {
-			if ti.Options == nil {
-				ti.Options = &options.Options{}
-			}
-			opts, ok := ti.Options.(*options.Options)
-			if !ok {
-				return errors.New("invalid v2 shim create options format")
+			opts, err := ti.getRuncOptions()
+			if err != nil {
+				return err
 			}
 			opts.IoGid = gid
 		} else {
